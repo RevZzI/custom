@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./style.css?13">
+    <link rel="shortcut icon" href="assets/images/holyworld.png" type="image/x-icon">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript"  src="assets/js/js.cookie.js"></script>
+    <title>RGB градиент-генератор для HolyWorld</title>
+  </head>
+
+  <body>
+    <div id="bg" class="container" style="font-family: Montserrat;">
+        <div class="hexColorTemplate main" style="display:none;">
+          <div class="row">
+            <label for="color-main-$NUM">Цвет в формате HEX #$NUM</label>
+            <input class="form-control col-md-1 hexColor main" id="color-main-$NUM" style="border-radius: 10px;" value="$VAL"
+                   data-jscolor="{preset:'small dark', position:'right'}" oninput="javascript: updateOutputText(event, '.main')"
+                   onchange="javascript: updateOutputText(event, '.main'); Cookies.set(`#${$NUM}`, document.getElementById('color-main-$NUM').value, { expires: 7, path: '' })"/>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="header" style="display: flex;gap: 15px;">
+              <img src="assets/images/holyworld.png" alt="HolyWorld" height="100" width="100">
+              <div class="header-content">
+                  <h1 class="title">Создать кастомную привилегию для HolyWorld</h1>
+                  <p class="graylabel1 gray" style="padding-bottom: 10px;">Для лучшего опыта используйте Google Chrome.</p>
+              </div>
+          </div>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-2" style="padding-left: 0;">
+                <div class="hexColors main container-fluid">
+                  <!-- Будет заполнено с помощью JavaScript -->
+                </div>
+              </div>
+              <div class="col-md-10" style="padding-right: 0;">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="output main">
+                      <label for="outputText-main">Результат</label>
+                      <label class="gray" for="outputText-main" style="font-weight: normal;">Скопируйте и вставьте это для текста с RGB-цветами!</label>
+                      <pre id="outputText-main" class="outputText main" style="border-radius: 10px; white-space: pre-wrap; height: 70px; font-family: MinecraftRegular; margin-bottom: 5px;"></pre>
+                      <div class="output-bottom" style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 15px">
+                        <button class="btn btn-info" onclick="window.location.href = 'index.html'">Редактор титулов</button>
+                        <div class="error-bottom" style="width: 100%">
+                            <p class="error main" style="margin: 0"></p>
+                        </div>
+                        <button class="btn btn-primary" onclick="copyTextToClipboard($('.outputText.main').text());">Скопировать</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="coloredNick main minecraft"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3" style="padding-left: 0;">
+                      <label for="nickname-main">Сообщение</label>
+                      <input id="nickname-main" class="form-control nickname main" type="text" maxlength="100" placeholder="Ваш текст"
+                             value="HolyWorld" oninput="javascript: updateOutputText(event, '.main');"
+                             onchange="javascript: updateOutputText(event, '.main')">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3" style="display: none; padding-left: 0;">
+                      <label for="output-format-main">Формат вывода</label>
+                      <select id="output-format-main"
+                              class="output-format main form-control"
+                              onchange="updateOutputText(event, '.main');">
+                        <option value='0'>По умолчанию (&#rrggbb)</option>
+                        <option value='2' selected>Старый стиль (&x&r&r&g&g&b&b)</option>
+                        <option value='6'>Консоль (§x§r§r§g§g§b§b)</option>
+                        <option value='8'>MOTD (\u00A7x)</option>
+                        <option value='1'>Чат (<#rrggbb>)</option>
+                        <option value='7'>BBCode [COLOR=#rrggbb]</option>
+                      </select>
+                    </div>
+                  </div>
+                    <div class="row">
+                        <div class="col-md-3" style="display: none; padding-left: 0;">
+                            <label for="color-preset-main">Предустановка цветов</label>
+                            <select id="color-preset-main"
+                                    class="color-preset form-control"
+                                    onchange="preset(this.value, '.main'); updateOutputText(event, '.main'); ">
+                                <option value='0'>Нет</option>
+                                <option value='1'>Радуга</option>
+                            </select>
+                        </div>
+                    </div>
+                  <div style="display: flex; flex-direction: row; gap: 15px; align-items: center; margin-right: -15px; margin-left: -15px; margin-top: 10px">
+                      <label for="numOfColors" style="margin-bottom: 0px">Количество цветов</label>
+                      <input class="col form-control numOfColors main"
+                             style="width: 75px;"
+                             value="2" id="numOfColors" type="number" min="2" max="10"
+                             onchange="updateOutputText(event, '.main'); toggleColors(this.value, '.main');"
+                             oninput="updateOutputText(event, '.main'); toggleColors(this.value, '.main');"/>
+                      <div class="dbold main">
+                          <input type="checkbox" id="bold-main" class="bold main" onclick="updateOutputText(event, '.main');"/>
+                          <label for="bold-main" style="margin-bottom: 0px">Жирный</label>
+                      </div>
+                      <div class="dunderline main">
+                          <input type="checkbox" id="underline-main" class="underline main" onclick="updateOutputText(event, '.main');"/>
+                          <label for="underline-main" style="margin-bottom: 0px">Подчеркивание</label>
+                      </div>
+                      <div class="dstrike main">
+                          <input type="checkbox" id="strike-main" class="strike main" onclick="updateOutputText(event, '.main');"/>
+                          <label for="strike-main" style="margin-bottom: 0px">Зачеркивание</label>
+                      </div>
+                      <div class="appearance main">
+                          <input type="checkbox" id="darkmode-main" class="darkmode main" onclick="darkMode();">
+                          <label for="darkmode-main" style="margin-bottom: 0px"> Тёмный режим</label>
+                      </div>
+                      <div class="modes main" style="display: none">
+                          <input type="checkbox" id="titlemode-main" class="titlemode main" onclick="switchTitleMode('.main');" checked>
+                          <label for="titlemode-main" style="margin-bottom: 0px;margin-top: 0px;"> Режим титулов</label>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <br>
+    <hr>
+    <div class="container" style="font-family: Montserrat;">
+        <div id="hexColorTemplate-second" class="hexColorTemplate second" style="display: none">
+            <div class="row">
+                <label for="color-second-$NUM">Цвет в формате HEX #$NUM</label>
+                <input class="form-control col-md-1 hexColor second" id="color-second-$NUM" style="border-radius: 10px;" value="$VAL"
+                       data-jscolor="{preset:'small dark', position:'right'}" oninput="javascript: updateOutputText(event, '.second')"
+                       onchange="javascript: updateOutputText(event, '.second'); Cookies.set(`#${$NUM}`, document.getElementById('color-second-$NUM').value, { expires: 7, path: '' })"/>
+            </div>
+        </div>
+        <div id="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2" style="padding-left: 0;">
+                        <div class="hexColors second container-fluid">
+                            <!-- Будет заполнено с помощью JavaScript -->
+                        </div>
+                    </div>
+                    <div class="col-md-10" style="padding-right: 0;">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div id="output">
+                                    <label id="label4" for="outputText-second">Результат</label>
+                                    <label id="graylabel2" class="gray" for="outputText-second" style="font-weight: normal;">Скопируйте и вставьте это для текста с RGB-цветами!</label>
+                                    <pre id="outputText-second" class="outputText second" style="border-radius: 10px; white-space: pre-wrap; height: 70px; font-family: MinecraftRegular; margin-bottom: 5px;"></pre>
+                                    <div class="output-bottom" style="display: flex;justify-content: space-between;align-items: center;">
+                                        <div style="display: flex; flex-direction: row; gap: 15px; align-items: center;">
+                                            <div class="dbold second">
+                                                <input type="checkbox" id="bold-second" class="bold second" onclick="updateOutputText(event, '.second');"/>
+                                                <label for="bold-second" style="margin-bottom: 0px">Жирный</label>
+                                            </div>
+                                            <div class="ditalics second">
+                                                <input type="checkbox" id="italics-second" class="italics second" onclick="updateOutputText(event, '.second');"/>
+                                                <label for="italics-second" style="margin-bottom: 0px">Курсив</label>
+                                            </div>
+                                            <div class="dunderline second">
+                                                <input type="checkbox" id="underline-second" class="underline second" onclick="updateOutputText(event, '.second');"/>
+                                                <label for="underline-second" style="margin-bottom: 0px">Подчеркивание</label>
+                                            </div>
+                                            <div class="dstrike second">
+                                                <input type="checkbox" id="strike-second" class="strike second" onclick="updateOutputText(event, '.second');"/>
+                                                <label for="strike-second" style="margin-bottom: 0px">Зачеркивание</label>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary" onclick="copyTextToClipboard($('.outputText.second').text());">Скопировать</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="coloredNick-second" class="coloredNick second minecraft"></div>
+                            </div>
+                            <div class="row" style="display: none">
+                                <div class="col-md-3" style="padding-left: 0;">
+                                    <label for="nickname-second">Сообщение</label>
+                                    <input id="nickname-second" class="form-control nickname second" type="text" maxlength="100" placeholder="HW"
+                                           value="Your message" oninput="javascript: updateOutputText(event, '.second');"
+                                           onchange="javascript: updateOutputText(event, '.second')">
+                                </div>
+                            </div>
+                            <div class="row" style="display: none">
+                                <div class="col-md-3" style="display: none; padding-left: 0;">
+                                    <label for="output-format-second">Формат вывода</label>
+                                    <select id="output-format-second"
+                                            class="output-format second form-control"
+                                            onchange="updateOutputText(event, '.second');">
+                                        <option value='0'>По умолчанию (&#rrggbb)</option>
+                                        <option value='2' selected>Старый стиль (&x&r&r&g&g&b&b)</option>
+                                        <option value='6'>Консоль (§x§r§r§g§g§b§b)</option>
+                                        <option value='8'>MOTD (\u00A7x)</option>
+                                        <option value='1'>Чат (<#rrggbb>)</option>
+                                        <option value='7'>BBCode [COLOR=#rrggbb]</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row" style="display: none">
+                                <div class="col-md-3" style="display: none; padding-left: 0;">
+                                    <label for="color-preset-second">Предустановка цветов</label>
+                                    <select id="color-preset-second"
+                                            class="color-preset form-control"
+                                            onchange="preset(this.value, '.second'); updateOutputText(event, '.second'); ">
+                                        <option value='0'>Нет</option>
+                                        <option value='1'>Радуга</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <br>
+        <br>
+        <footer class="row">
+            <p>На правах свободного пользования, автор кода: <a href="https://rgb.birdflop.com">RGB Birdflop</a></p>
+        </footer>
+    </div>
+    <script src="jscolor.js"></script>
+    <script src="script_custom.js?30"></script>
+
+    </body>
+</html>
