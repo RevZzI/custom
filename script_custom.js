@@ -362,7 +362,7 @@ function updateOutputText(event, suffix = '') {
 
   if (suffix === '.main') {
     newNick = translateAllSymbols(newNick);
-    newNick = '«' + newNick + '»';
+    newNick = '' + newNick + '';
   }
 
   const bold = $('.bold' + suffix).is(':checked');
